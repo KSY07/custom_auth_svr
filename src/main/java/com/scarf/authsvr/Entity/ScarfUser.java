@@ -18,6 +18,7 @@ import com.scarf.authsvr.Entity.Constant.Roles;
 import javax.validation.constraints.Email;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +27,7 @@ import lombok.Setter;
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ScarfUser extends BaseEntity {
     
     @Id
