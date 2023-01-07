@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.security.authentication.AuthenticationManager;
 
@@ -21,6 +22,11 @@ public class AuthSecurityConfig {
 
     @Autowired
     private ScarfUserDetailsService scarfUserDetailsService;
+
+    @Bean
+    public JwtRequestFilter authenticationJwtRequestFilter() {
+        return new JwtRequestFilter();
+    }
     
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -52,6 +58,10 @@ public class AuthSecurityConfig {
         .headers().addHeaderWriter(new XFrameOptionsHeaderWriter(
             XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN
         ));
+
+        http.authenticationProvider(authenticationProvider());
+
+        http.addFilterBefore(authenticationJwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
