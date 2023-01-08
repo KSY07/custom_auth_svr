@@ -20,8 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.scarf.authsvr.DTO.ResponseMessageDTO;
 import com.scarf.authsvr.DTO.SignInRequestDTO;
+import com.scarf.authsvr.DTO.SignInResponseDTO;
+import com.scarf.authsvr.Entity.RefreshToken;
+import com.scarf.authsvr.Service.RefreshTokenService;
 import com.scarf.authsvr.Service.ScarfUserDetails;
 import com.scarf.authsvr.Service.ScarfUserDetailsService;
+import com.scarf.authsvr.Utils.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +34,8 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final ScarfUserDetailsService scarfUserDetailsService;
+    private final RefreshTokenService refreshTokenService;
+    private final JwtUtils jwtUtils;
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     /**
@@ -50,6 +56,9 @@ public class AuthController {
             // Save authentication object to SecurityContextHolder
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
+            // Generate Auth Token
+            String authToken = jwtUtils.generateAuthToken(authentication);
+
             // Get userDetails Object Info from authentication Object
             ScarfUserDetails scarfUserDetails = (ScarfUserDetails) authentication.getPrincipal();
             
@@ -59,9 +68,17 @@ public class AuthController {
             List<String> roles = scarfUserDetails.getAuthorities().stream()
                     .map(item -> item.getAuthority())
                     .collect(Collectors.toList());
+            
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(scarfUserDetails.getId());
 
             return ResponseEntity.ok(
-                    new ResponseMessageDTO("Login Complete: " + req.getEmail()));
+                    new SignInResponseDTO(
+                        scarfUserDetails.getEmail(),
+                        scarfUserDetails.getUsername(),
+                        authToken,
+                        refreshToken.getToken(),
+                        roles
+                    ));
         } catch (UsernameNotFoundException ex) {
             throw new UsernameNotFoundException("Login Fail: " + req.getEmail());
         }

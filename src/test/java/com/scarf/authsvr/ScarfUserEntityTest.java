@@ -19,6 +19,7 @@ public class ScarfUserEntityTest {
 
     @Test
     public void userCreateTest(){
+        
        ScarfUser user = new ScarfUser().builder()
                         .email("ksy2008w@naver.com")
                         .password("1111")
