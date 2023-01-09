@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -100,5 +102,17 @@ public class AuthControllerTest {
 
         logger.info(mvc.toString());
                                     
+    }
+
+    @Test
+    @DisplayName("Logout Test")
+    @WithUserDetails(value = "ksy2008w@daum.net", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    public void logoutTest() throws Exception {
+
+        mvc.perform(MockMvcRequestBuilders.get("logout")
+                                            .header("Authorization", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrc3kyMDA4d0BkYXVtLm5ldCIsImlhdCI6MTY3MzIzMzUyMSwiZXhwIjoxNjczMjM3MTIxfQ.bc459bgL2-6e1nD2QJrTmUDgupJy7QtNE5uEN9yYpyiDwHPPUctLwtJpU0e9Y8jJ1qCH6jDG_qv_3LBJpRHalg")
+                                            .with(csrf()))
+                                            .andExpect(status().isOk())
+                                            .andDo(print());
     }
 }

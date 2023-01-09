@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -19,8 +20,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -189,6 +192,27 @@ public class AuthController {
                                         );
                                     })
                                         .orElseThrow(() -> new UsernameNotFoundException("Refresh Token is invalid"));
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> tryLogOut(HttpServletRequest req, HttpServletResponse res) {
+        String refreshToken = req.getHeader("RefreshToken");
+        ScarfUser current_user = scarfUserRepository.findByEmail(
+            jwtUtils.getEmailFromJwtToken(refreshToken)
+        ).orElseThrow(()-> new RuntimeException("Fatal Error: User Not Found"));
+        
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if(auth != null && auth.isAuthenticated()) {
+            new SecurityContextLogoutHandler().logout(req,res,auth);
+        }
+
+        refreshTokenRepository.deleteByUser(current_user);
+        
+
+        return ResponseEntity.ok(
+            new ResponseMessageDTO("logout complete")
+        );
     }
 
     /**
