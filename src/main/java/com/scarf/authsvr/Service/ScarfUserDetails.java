@@ -71,7 +71,7 @@ public class ScarfUserDetails implements UserDetails {
 
     public boolean isAccountNonLocked() {
 
-        return isLocked;
+        return !isLocked;
     }
 
     public boolean isAccountNonExpired() {
@@ -86,6 +86,6 @@ public class ScarfUserDetails implements UserDetails {
 
     public boolean isEnabled() {
 
-        return email_verified && isLocked;
+        return true; // 추후 이메일 확인 로직 변경요망
     }
 }

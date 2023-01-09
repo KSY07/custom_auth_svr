@@ -5,8 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,10 +20,14 @@ import com.scarf.authsvr.Service.ScarfUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class AuthSecurityConfig {
 
     @Autowired
     private ScarfUserDetailsService scarfUserDetailsService;
+
+    @Autowired
+    private ScarfAuthenticationEntryPoint unauthorizedHandler;
 
     @Bean
     public JwtRequestFilter authenticationJwtRequestFilter() {
@@ -51,7 +57,9 @@ public class AuthSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         
-        http.cors().disable()
+        http.cors().and().csrf().disable() //추후 csrf 켜야함
+        .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .authorizeRequests(
             req -> req.antMatchers("/**")
             .permitAll().anyRequest().authenticated())

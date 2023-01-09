@@ -1,6 +1,10 @@
 package com.scarf.authsvr;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -20,6 +24,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scarf.authsvr.DTO.SignInRequestDTO;
+import com.scarf.authsvr.DTO.SignUpRequestDTO;
+import com.scarf.authsvr.Entity.Constant.Roles;
 
 
 @SpringBootTest
@@ -49,18 +55,46 @@ public class AuthControllerTest {
     }
 
     @Test
+    @DisplayName("Sign Up Request Test")
+    public void signUpTest() throws Exception {
+        Set<String> roles = new HashSet<>();
+        roles.add("ROLE_ADMIN");
+        String body = mapper.writeValueAsString(
+            SignUpRequestDTO.builder()
+            .email("ksy2008w@daum.net")
+            .password("1111")
+            .company("bizpeer")
+            .roles(roles)
+            .build()
+        );
+
+        logger.info(body.toString());
+
+        mvc.perform(MockMvcRequestBuilders.post("/signup")
+                                            .content(body)
+                                            .contentType(MediaType.APPLICATION_JSON)
+                                            .with(csrf()))
+                                        .andExpect(status().isOk())
+                                        .andDo(print());
+
+        logger.info(mvc.toString());
+    }
+
+    @Test
     @DisplayName("Sign In Request Test")
     public void signInTest() throws Exception {
-        String body = mapper.writeValueAsString(SignInRequestDTO
-                                                .builder()
-                                                .email("ksy2008w@naver.com")
+
+        String body = mapper.writeValueAsString(SignInRequestDTO.builder()
+                                                .email("ksy2008w@daum.net")
                                                 .password("1111")
                                                 .build());
 
+        logger.info(body);
 
-        mvc.perform(MockMvcRequestBuilders.post("http://localhost:8080/signin")                                                           .with(csrf())
+        mvc.perform(MockMvcRequestBuilders.post("/signin")
                                                             .content(body)
-                                                            .contentType(MediaType.APPLICATION_JSON))
+                                                            .contentType(MediaType.APPLICATION_JSON)
+                                                            .with(csrf()))
                                             .andExpect(status().isOk())
                                             .andDo(print());
 
