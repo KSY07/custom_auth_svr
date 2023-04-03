@@ -34,7 +34,7 @@ pipeline {
         }
         stage('도커 컨테이너 실행') {
             steps {
-                sh "docker run -i -t -d -p 9090:9090 --memory 400m --name scarf_auth ksy2008w/scarf_authsvr:${version}"
+                sh "docker run -i -t -d -p 9090:9090 --memory 400m --name scarf_authsvr ksy2008w/scarf_authsvr:${version}"
                 echo "###################################### SCARF_AUTH_SVR Init Complete###############################"
             }
         }
