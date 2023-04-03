@@ -1,0 +1,20 @@
+server:
+  port: 9090
+
+spring:
+  datasource:
+    # url: jdbc:mariadb://172.16.10.201:5001/scarf_auth?serverTimeZone=Asia/Seoul?encoding=utf-8
+    url: jdbc:mariadb://172.16.10.201:4406/scarf_auth?serverTimeZone=Asia/Seoul?encoding=utf-8
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: root
+    password: admin
+  jpa:
+    hibernate.ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MariaDB103Dialect
+
+
+jwt:
+  secret: "bizpeer"
+  ExpirationMs: 3600000
+  RefreshExpirationMs: 86400000

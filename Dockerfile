@@ -1,0 +1,9 @@
+FROM openjdk:17-alpine3.14
+LABEL author="김세영"
+ARG version="1.0"
+COPY . /authsvr
+RUN chmod +x gradlew
+RUN ./gradlew clean build
+WORKDIR ./build/libs
+EXPOSE 9090
+CMD ["nohup", "java", "-jar", "authsvr-1.0.jar","-Dspring.profiles.active=biz", "1>auth.log", "2>&1", "&"]
