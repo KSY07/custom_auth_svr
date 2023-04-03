@@ -7,4 +7,4 @@ RUN chmod +x gradlew
 RUN ./gradlew clean build
 WORKDIR ./build/libs
 EXPOSE 9090
-CMD ["java", "-jar", "authsvr-1.0.jar","-Dspring.profiles.active=biz"]
+CMD ["java","-jar","-Dspring.profiles.active=biz","authsvr-1.0.jar"]
