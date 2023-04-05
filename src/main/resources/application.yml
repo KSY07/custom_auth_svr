@@ -4,10 +4,16 @@ server:
 spring:
     profiles:
         active: local
+    mvc:
+        view:
+            prefix: /WEB-INF/
+            suffix: .jsp
+
 
 
 jwt:
     secret: "bizpeer"
     ExpirationMs: 3600000
     RefreshExpirationMs: 86400000
+
     
