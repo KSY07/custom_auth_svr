@@ -23,6 +23,8 @@ public class SignUpRequestDTO {
     @NotNull
     private @Getter @Setter String password;
 
+    private @Getter @Setter String username;
+
     private @Getter @Setter String company;
 
     private @Getter @Setter Set<String> roles;

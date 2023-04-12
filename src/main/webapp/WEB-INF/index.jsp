@@ -48,5 +48,9 @@
 </div>
 </body>
 <script>
-
+    $(document).ready(() => {
+       $("#home").addClass("active");
+       $("#userManage").removeClass("active");
+       $("#authManage").removeClass("active");
+    });
 </script>

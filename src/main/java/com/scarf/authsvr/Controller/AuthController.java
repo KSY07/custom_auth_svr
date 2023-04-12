@@ -126,6 +126,7 @@ public class AuthController {
             ScarfUser newUser = ScarfUser.builder()
                                 .email(req.getEmail())
                                 .password(passwordEncoder.encode(req.getPassword()))
+                                .username(req.getUsername())
                                 .company(req.getCompany())
                                 .isLocked(false)
                                 .email_verify(true) //추후 False로 변환해야 이메일 인증 가능

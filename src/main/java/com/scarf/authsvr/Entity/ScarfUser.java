@@ -40,6 +40,8 @@ public class ScarfUser extends BaseEntity {
     @NotNull
     private @Getter @Setter String password;
 
+    private @Getter @Setter String username;
+
     private @Getter @Setter String company;
 
     private @Getter @Setter Boolean email_verify;

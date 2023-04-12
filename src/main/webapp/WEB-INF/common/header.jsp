@@ -9,14 +9,45 @@
 <body>
     <ul class="nav nav-pills nav-fill">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a
+                    class="nav-link active"
+                    id="home" aria-current="page" href="/"
+                    onclick="onClickHomeTab()">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">유저 관리</a>
+            <a
+                    class="nav-link"
+                    href="/userManage" id="userManage"
+                    onclick="onClickUserManageTab()">유저 관리</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">권한 관리</a>
+            <a
+                    class="nav-link"
+                    href="#"
+                    id="authManage"
+                    onclick="onClickAuthManageTab()">권한 관리</a>
         </li>
         <li></li>
     </ul>
 </body>
+<script>
+
+    const onClickHomeTab = () => {
+        $("#home").addClass("active");
+        $("#userManage").removeClass("active");
+        $("#authManage").removeClass("active");
+    }
+
+    const onClickUserManageTab = () => {
+        $("#home").removeClass("active");
+        $("#userManage").addClass("active");
+        $("#authManage").removeClass("active");
+    }
+
+    const onClickAuthManageTab = () => {
+        $("#home").removeClass("active");
+        $("#userManage").removeClass("active");
+        $("#authManage").addClass("active");
+    }
+
+</script>
